@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <title>Speech Recording</title>
@@ -36,8 +36,8 @@
     });
   </script>
 </body>
-</html>
-<!-- 
+</html> -->
+
 
 <!DOCTYPE html>
 <html>
@@ -47,12 +47,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script type="text/javascript" >// <![CDATA[ 
-        function loading(){
-            $("#loading").show();
-            $("#content").hide();       
-        }
-// ]]></script>
+
 	<title>Alexa</title>
 	
 	<style>
@@ -70,7 +65,7 @@ body {
 	
   background-image: url("https://raw.githubusercontent.com/pik1989/Alexa-FlaskAPI/main/templates/background.JPG");
   background-color: #cccccc;
-  height: 755px;
+  height: 600px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -108,17 +103,45 @@ div#loading {
  <div>
 	<h1 class="heading center"> </h1>
 	<h1 class="heading center"> </h1>
-	<form method="POST" action="/" enctype="multipart/form-data">	
-	 <button type="submit" class="btn btn-primary button_add" style="margin: 0 auto;display: block; border-radius: 12px;width:100px;"><i class="fa fa-microphone"></i></button>
-   <h1 class="heading center1">Tap to Speak</h1>
-   	</form>
-	<form method="GET" action="/" enctype="multipart/form-data">
-	</form>
+	<!-- <form >	 -->
+	 <button  id="start-btn" class="btn btn-primary button_add" style="margin: 0 auto;display: block; border-radius: 12px;width:100px;"><i class="fa fa-microphone"></i></button>
+   <h1  class="heading center1">Tap to Speak</h1>
+   <!-- <button id="start-btn">Start Recording</button> -->
+   	<!-- </form> -->
+	<!-- <form method="GET" action="/" enctype="multipart/form-data">
+	</form> -->
 	<br>
 	<div id="loading" ><br>
   <p class="heading"> Please wait </p></div>
 <br>
-</div>
 
+</div>
+<script>
+  const recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  const chunks = [];
+
+  recognition.onresult = function(event) {
+    const result = event.results[event.results.length - 1];
+    const transcript = result[0].transcript;
+
+    console.log(transcript);
+
+    // Send the transcript to the Flask backend
+    fetch('/speech', {
+      method: 'POST',
+      body: transcript
+    }).then(response => {
+      console.log('Speech sent to backend');
+    }).catch(error => {
+      console.error('Error sending speech:', error);
+    });
+  };
+
+  document.getElementById('start-btn').addEventListener('click', function() {
+    recognition.start();
+    document.getElementById('start-btn').disabled = true;
+  });
+</script>
 </body>
-</html> -->
+</html>

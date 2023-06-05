@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 
 import speech_recognition as sr
 import pyttsx3
-# import pywhatkit
+import pywhatkit
 import datetime
 import pyjokes
 import wikipedia
@@ -126,7 +126,7 @@ def run_alexa(command_speech):
         song = command.replace('play', '')
         engine_talk('Playing....' + song)
         print("Playing....")
-        # pywhatkit.playonyt(song)     
+        pywhatkit.playonyt(song)     
     elif 'time' in command:
         time = datetime.datetime.now().strftime('%I:%M %p')
         print(time)
@@ -159,7 +159,7 @@ def submit():
 
     
 # Function to ask Python interview questions
-def ask_python_questions():
+def ask_python_questions(speech_data):
     engine_talk("Great! Let's proceed with Python interview questions.")
     print("Great! Let's proceed with Python interview questions.")
     global audio_data_speech
@@ -171,7 +171,7 @@ def ask_python_questions():
         "What is the purpose of the 'self' keyword in Python?",
         # Add more questions as needed
     ]
-    
+    answer_list = []
     # Loop through the questions and ask the user
     for i, question in enumerate(questions, start=1):
         print(f"Question {i}: {question}")
@@ -181,13 +181,17 @@ def ask_python_questions():
         engine_talk("Please provide your answer.")
         print("Audio Data Speech : 1",audio_data_speech)
         time.sleep(20)
+        if audio_data_speech == speech_data:
+            pass
+        else:
+            answer_list.append(audio_data_speech)
         print("Audio Data Speech : 2",audio_data_speech)
         # Transcribe the user's answer from speech
         # audio_file = "user_answer.wav"  # Replace with the path to the audio file
         # user_answer = transcribe_audio(audio_file)
         
         # print("User's Answer:", user_answer)
-        print("")
+    print("ALL LSIT ",answer_list)
 
 def ask_data_analysys_questions():
     engine_talk("Great! Let's proceed with Data Analysys interview questions.")
@@ -218,6 +222,7 @@ def ask_data_analysys_questions():
         
         # print("User's Answer:", user_answer)
         print("")
+        
 @app.route('/speech', methods=['POST'])
 def process_speech():
     global audio_data_speech
@@ -235,7 +240,7 @@ def process_speech():
         if programming_language == "python" or "python" in experience.lower():
             print("User has experience in Python.")
 
-            ask_python_questions()
+            ask_python_questions(audio_data_speech)
             print("User has experience in Python.",audio_data)
     run_alexa(audio_data)
     return 'Success'  # Send a response to the client
